@@ -200,6 +200,22 @@ func getInboundOptions(tag string, info *panel.NodeInfo, c *conf.Options) (optio
 			Obfs:          info.Hysteria.Obfs,
 			TLS:           &tls,
 		}
+	case "hysteria2":
+		in.Type = "hysteria2"
+		var obfs *option.Hysteria2Obfs
+		if info.Hysteria2.ObfsType != "" {
+			obfs = &option.Hysteria2Obfs{
+				Type:     info.Hysteria2.ObfsType,
+				Password: info.Hysteria2.ObfsPassword,
+			}
+		}
+		in.Hysteria2Options = option.Hysteria2InboundOptions{
+			ListenOptions: listen,
+			UpMbps:        info.Hysteria2.UpMbps,
+			DownMbps:      info.Hysteria2.DownMbps,
+			Obfs:          obfs,
+			TLS:           &tls,
+		}
 	}
 	return in, nil
 }

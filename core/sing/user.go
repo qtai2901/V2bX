@@ -67,7 +67,16 @@ func (b *Sing) AddUsers(p *core.AddUsersParams) (added int, err error) {
 				AuthString: p.Users[i].Uuid,
 			}
 		}
-		err = b.inbounds[p.Tag].(*inbound.HysteriaM).AddUsers(us)
+		err = b.inbounds[p.Tag].(*inbound.Hysteria).AddUsers(us)
+	case "hysteria2":
+		us := make([]option.Hysteria2User, len(p.Users))
+		for i := range p.Users {
+			us[i] = option.Hysteria2User{
+				Name:     p.Users[i].Uuid,
+				Password: p.Users[i].Uuid,
+			}
+		}
+		err = b.inbounds[p.Tag].(*inbound.Hysteria2).AddUsers(us)
 	}
 	if err != nil {
 		return 0, err
@@ -105,7 +114,9 @@ func (b *Sing) DelUsers(users []panel.UserInfo, tag string) error {
 		case "trojan":
 			del = i.(*inbound.Trojan)
 		case "hysteria":
-			del = i.(*inbound.HysteriaM)
+			del = i.(*inbound.Hysteria)
+		case "hysteria2":
+			del = i.(*inbound.Hysteria2)
 		}
 	} else {
 		return errors.New("the inbound not found")

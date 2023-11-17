@@ -33,6 +33,7 @@ type NodeInfo struct {
 	Shadowsocks *ShadowsocksNode
 	Trojan      *TrojanNode
 	Hysteria    *HysteriaNode
+	Hysteria2   *Hysteria2Node
 	Common      *CommonNode
 }
 
@@ -98,6 +99,14 @@ type HysteriaNode struct {
 	UpMbps   int    `json:"up_mbps"`
 	DownMbps int    `json:"down_mbps"`
 	Obfs     string `json:"obfs"`
+}
+
+type Hysteria2Node struct {
+	CommonNode
+	UpMbps       int    `json:"up_mbps"`
+	DownMbps     int    `json:"down_mbps"`
+	ObfsType     string `json:"obfs"`
+	ObfsPassword string `json:"obfs-password"`
 }
 
 type RawDNS struct {
@@ -166,7 +175,7 @@ func (c *Client) GetNodeInfo() (node *NodeInfo, err error) {
 		rsp := &ShadowsocksNode{}
 		err = json.Unmarshal(r.Body(), rsp)
 		if err != nil {
-			return nil, fmt.Errorf("decode v2ray params error: %s", err)
+			return nil, fmt.Errorf("decode shadowsocks params error: %s", err)
 		}
 		cm = &rsp.CommonNode
 		node.Shadowsocks = rsp
@@ -175,7 +184,7 @@ func (c *Client) GetNodeInfo() (node *NodeInfo, err error) {
 		rsp := &TrojanNode{}
 		err = json.Unmarshal(r.Body(), rsp)
 		if err != nil {
-			return nil, fmt.Errorf("decode v2ray params error: %s", err)
+			return nil, fmt.Errorf("decode trojan params error: %s", err)
 		}
 		cm = (*CommonNode)(rsp)
 		node.Trojan = rsp
@@ -184,10 +193,19 @@ func (c *Client) GetNodeInfo() (node *NodeInfo, err error) {
 		rsp := &HysteriaNode{}
 		err = json.Unmarshal(r.Body(), rsp)
 		if err != nil {
-			return nil, fmt.Errorf("decode v2ray params error: %s", err)
+			return nil, fmt.Errorf("decode hysteria params error: %s", err)
 		}
 		cm = &rsp.CommonNode
 		node.Hysteria = rsp
+		node.Security = Tls
+	case "hysteria2":
+		rsp := &Hysteria2Node{}
+		err = json.Unmarshal(r.Body(), rsp)
+		if err != nil {
+			return nil, fmt.Errorf("decode hysteria2 params error: %s", err)
+		}
+		cm = &rsp.CommonNode
+		node.Hysteria2 = rsp
 		node.Security = Tls
 	}
 

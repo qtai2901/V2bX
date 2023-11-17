@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/InazumaV/V2bX/api/iprecoder"
 	"github.com/InazumaV/V2bX/api/panel"
 	"github.com/InazumaV/V2bX/common/task"
 	"github.com/InazumaV/V2bX/conf"
@@ -21,7 +20,6 @@ type Controller struct {
 	traffic                   map[string]int64
 	userList                  []panel.UserInfo
 	info                      *panel.NodeInfo
-	ipRecorder                iprecoder.IpRecorder
 	nodeInfoMonitorPeriodic   *task.Task
 	userReportPeriodic        *task.Task
 	renewCertPeriodic         *task.Task
