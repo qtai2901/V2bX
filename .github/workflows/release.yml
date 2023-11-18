@@ -26,12 +26,10 @@ jobs:
     strategy:
       matrix:
         # Include amd64 on all platforms.
-        goos: [windows, freebsd, linux, dragonfly, darwin]
+        goos: [windows, freebsd, linux, darwin]
         goarch: [amd64, 386]
         exclude:
-          # Exclude i386 on darwin and dragonfly.
-          - goarch: 386
-            goos: dragonfly
+          # Exclude i386 on darwin.
           - goarch: 386
             goos: darwin
         include:
@@ -110,7 +108,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
-          go-version: '1.20'
+          go-version: '1.21.4'
 
       - name: Get project dependencies
         run: go mod download
