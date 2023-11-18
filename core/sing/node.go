@@ -61,7 +61,14 @@ func getInboundOptions(tag string, info *panel.NodeInfo, c *conf.Options) (optio
 		tls.Enabled = true
 		v := info.VAllss
 		tls.ServerName = v.TlsSettings.ServerName
-		dest, _ := strconv.Atoi(v.TlsSettings.ServerPort)
+		port, _ := strconv.Atoi(v.TlsSettings.ServerPort)
+		var dest string
+		if v.TlsSettings.Dest != "" {
+			dest = v.TlsSettings.Dest
+		} else {
+			dest = tls.ServerName
+		}
+
 		mtd, _ := time.ParseDuration(v.RealityConfig.MaxTimeDiff)
 		tls.Reality = &option.InboundRealityOptions{
 			Enabled:    true,
@@ -69,8 +76,8 @@ func getInboundOptions(tag string, info *panel.NodeInfo, c *conf.Options) (optio
 			PrivateKey: v.TlsSettings.PrivateKey,
 			Handshake: option.InboundRealityHandshakeOptions{
 				ServerOptions: option.ServerOptions{
-					Server:     tls.ServerName,
-					ServerPort: uint16(dest),
+					Server:     dest,
+					ServerPort: uint16(port),
 				},
 			},
 			MaxTimeDifference: option.Duration(mtd),
