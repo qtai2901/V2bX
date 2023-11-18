@@ -23,10 +23,10 @@ type DNSConfig struct {
 }
 
 type Sing struct {
-	box        *box.BoxEx
+	box        *box.Box
 	ctx        context.Context
 	hookServer *HookServer
-	router     adapter.RouterEx
+	router     adapter.Router
 	logFactory log.Factory
 	inbounds   map[string]adapter.Inbound
 }
@@ -79,7 +79,7 @@ func New(c *conf.CoreConfig) (vCore.Core, error) {
 		os.Setenv("SING_DNS_PATH", c.SingConfig.DnsConfigPath)
 	}
 	ctx := context.Background()
-	b, err := box.NewEx(box.Options{
+	b, err := box.New(box.Options{
 		Context: ctx,
 		Options: options,
 	})
@@ -87,13 +87,12 @@ func New(c *conf.CoreConfig) (vCore.Core, error) {
 		return nil, err
 	}
 	hs := NewHookServer(c.SingConfig.EnableConnClear)
-	b.RouterEx().SetClashServer(hs)
-	b.LogFactory()
+	b.Router().SetClashServer(hs)
 	return &Sing{
-		ctx:        ctx,
+		ctx:        b.Router().GetCtx(),
 		box:        b,
 		hookServer: hs,
-		router:     b.RouterEx(),
+		router:     b.Router(),
 		logFactory: b.LogFactory(),
 		inbounds:   make(map[string]adapter.Inbound),
 	}, nil

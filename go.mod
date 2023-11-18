@@ -231,6 +231,6 @@ require (
 )
 
 replace (
-	github.com/sagernet/sing-box v1.7.0-beta.3 => github.com/wyx2685/sing-box_mod v0.0.0-20231117174558-041a716ebdfe
+	github.com/sagernet/sing-box v1.7.0-beta.3 => github.com/wyx2685/sing-box_mod v0.0.0-20231118013441-da6082ccc536
 	github.com/sagernet/sing-shadowsocks v0.2.4 => github.com/inazumav/sing-shadowsocks v0.0.0-20230815111927-7c68cbaeec5c
 )

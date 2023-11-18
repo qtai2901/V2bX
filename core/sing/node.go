@@ -232,7 +232,7 @@ func (b *Sing) AddNode(tag string, info *panel.NodeInfo, config *conf.Options) e
 
 	in, err := inbound.New(
 		b.ctx,
-		b.router,
+		b.box.Router(),
 		b.logFactory.NewLogger(F.ToString("inbound/", c.Type, "[", tag, "]")),
 		c,
 		nil,
