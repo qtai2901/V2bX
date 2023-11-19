@@ -10,11 +10,11 @@ require (
 	github.com/goccy/go-json v0.10.2
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/juju/ratelimit v1.0.2
-	github.com/sagernet/sing v0.2.18-0.20231108041402-4fbbd193203c
+	github.com/sagernet/sing v0.2.18-0.20231117150934-256fafcd99b6
 	github.com/sagernet/sing-box v1.7.0-beta.3
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.8.0
-	github.com/xtls/xray-core v1.8.6-0.20231114151426-f1c81557dcf8
+	github.com/xtls/xray-core v1.8.6
 	golang.org/x/crypto v0.15.0
 	golang.org/x/sys v0.14.0
 	google.golang.org/protobuf v1.31.0
@@ -119,7 +119,7 @@ require (
 	github.com/logrusorgru/aurora v2.0.3+incompatible // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/mholt/acmez v1.2.0 // indirect
-	github.com/miekg/dns v1.1.56 // indirect
+	github.com/miekg/dns v1.1.57 // indirect
 	github.com/mimuret/golang-iij-dpf v0.9.1 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
@@ -231,6 +231,6 @@ require (
 )
 
 replace (
-	github.com/sagernet/sing-box v1.7.0-beta.3 => github.com/wyx2685/sing-box_mod v0.0.0-20231118013441-da6082ccc536
+	github.com/sagernet/sing-box v1.7.0-beta.3 => github.com/wyx2685/sing-box_mod v0.0.0-20231118140036-c516c19fca43
 	github.com/sagernet/sing-shadowsocks v0.2.4 => github.com/inazumav/sing-shadowsocks v0.0.0-20230815111927-7c68cbaeec5c
 )

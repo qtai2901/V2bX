@@ -210,10 +210,15 @@ func getInboundOptions(tag string, info *panel.NodeInfo, c *conf.Options) (optio
 	case "hysteria2":
 		in.Type = "hysteria2"
 		var obfs *option.Hysteria2Obfs
-		if info.Hysteria2.ObfsType != "" {
+		if info.Hysteria2.ObfsType != "" && info.Hysteria2.ObfsPassword != "" {
 			obfs = &option.Hysteria2Obfs{
 				Type:     info.Hysteria2.ObfsType,
 				Password: info.Hysteria2.ObfsPassword,
+			}
+		} else if info.Hysteria2.ObfsType != "" {
+			obfs = &option.Hysteria2Obfs{
+				Type:     "salamander",
+				Password: info.Hysteria2.ObfsType,
 			}
 		}
 		in.Hysteria2Options = option.Hysteria2InboundOptions{
