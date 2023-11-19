@@ -10,7 +10,7 @@ require (
 	github.com/goccy/go-json v0.10.2
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/juju/ratelimit v1.0.2
-	github.com/sagernet/sing v0.2.18-0.20231117150934-256fafcd99b6
+	github.com/sagernet/sing v0.2.18-0.20231119032432-6a556bfa50cc
 	github.com/sagernet/sing-box v1.7.0-beta.3
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.8.0
@@ -159,7 +159,7 @@ require (
 	github.com/sagernet/bbolt v0.0.0-20231014093535-ea5cb2fe9f0a // indirect
 	github.com/sagernet/cloudflare-tls v0.0.0-20230829051644-4a68352d0c4a // indirect
 	github.com/sagernet/go-tun2socks v1.16.12-0.20220818015926-16cb67876a61 // indirect
-	github.com/sagernet/gvisor v0.0.0-20230930141345-5fef6f2e17ab // indirect
+	github.com/sagernet/gvisor v0.0.0-20231119034329-07cfb6aaf930 // indirect
 	github.com/sagernet/netlink v0.0.0-20220905062125-8043b4a9aa97 // indirect
 	github.com/sagernet/quic-go v0.40.0 // indirect
 	github.com/sagernet/sing-dns v0.1.11-0.20231116102430-5a2133f5d358 // indirect
@@ -168,7 +168,7 @@ require (
 	github.com/sagernet/sing-shadowsocks v0.2.5 // indirect
 	github.com/sagernet/sing-shadowsocks2 v0.1.4 // indirect
 	github.com/sagernet/sing-shadowtls v0.1.4 // indirect
-	github.com/sagernet/sing-tun v0.1.20-0.20231116102736-3fa4ee409a9d // indirect
+	github.com/sagernet/sing-tun v0.1.20-0.20231119035513-f6ea97c5af71 // indirect
 	github.com/sagernet/sing-vmess v0.1.8 // indirect
 	github.com/sagernet/smux v0.0.0-20230312102458-337ec2a5af37 // indirect
 	github.com/sagernet/tfo-go v0.0.0-20230816093905-5a5c285d44a6 // indirect
@@ -230,6 +230,6 @@ require (
 )
 
 replace (
-	github.com/sagernet/sing-box v1.7.0-beta.3 => github.com/wyx2685/sing-box_mod v0.0.0-20231119064621-2853d5fe45d7
+	github.com/sagernet/sing-box v1.7.0-beta.3 => github.com/wyx2685/sing-box_mod v0.0.0-20231119104152-0fdf5b5ac793
 	github.com/sagernet/sing-shadowsocks v0.2.4 => github.com/inazumav/sing-shadowsocks v0.0.0-20230815111927-7c68cbaeec5c
 )
