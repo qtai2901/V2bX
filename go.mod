@@ -162,7 +162,6 @@ require (
 	github.com/sagernet/gvisor v0.0.0-20230930141345-5fef6f2e17ab // indirect
 	github.com/sagernet/netlink v0.0.0-20220905062125-8043b4a9aa97 // indirect
 	github.com/sagernet/quic-go v0.40.0 // indirect
-	github.com/sagernet/reality v0.0.0-20230406110435-ee17307e7691 // indirect
 	github.com/sagernet/sing-dns v0.1.11-0.20231116102430-5a2133f5d358 // indirect
 	github.com/sagernet/sing-mux v0.1.5-0.20231109075101-6b086ed6bb07 // indirect
 	github.com/sagernet/sing-quic v0.1.4-0.20231114135334-e2a6aab55cca // indirect
@@ -231,6 +230,6 @@ require (
 )
 
 replace (
-	github.com/sagernet/sing-box v1.7.0-beta.3 => github.com/wyx2685/sing-box_mod v0.0.0-20231118140036-c516c19fca43
+	github.com/sagernet/sing-box v1.7.0-beta.3 => github.com/wyx2685/sing-box_mod v0.0.0-20231119064621-2853d5fe45d7
 	github.com/sagernet/sing-shadowsocks v0.2.4 => github.com/inazumav/sing-shadowsocks v0.0.0-20230815111927-7c68cbaeec5c
 )
