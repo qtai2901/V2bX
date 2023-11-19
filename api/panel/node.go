@@ -78,7 +78,7 @@ type TlsSettings struct {
 	ServerPort string `json:"server_port"`
 	ShortId    string `json:"short_id"`
 	PrivateKey string `json:"private_key"`
-	Xver       uint8  `json:"xver"`
+	Xver       uint8  `json:"xver,string"`
 }
 
 type RealityConfig struct {
