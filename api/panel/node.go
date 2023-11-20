@@ -128,7 +128,7 @@ func (c *Client) GetNodeInfo() (node *NodeInfo, err error) {
 		SetHeader("If-None-Match", c.nodeEtag).
 		Get(path)
 	if err = c.checkResponse(r, path, err); err != nil {
-		return
+		return nil, err
 	}
 	if r.StatusCode() == 304 {
 		return nil, nil
@@ -238,9 +238,7 @@ func (c *Client) GetNodeInfo() (node *NodeInfo, err error) {
 			}
 		case "dns":
 			var domains []string
-			for _, v := range matchs {
-				domains = append(domains, v)
-			}
+			domains = append(domains, matchs...)
 			if matchs[0] != "main" {
 				node.RawDNS.DNSMap[strconv.Itoa(i)] = map[string]interface{}{
 					"address": cm.Routes[i].ActionValue,
@@ -249,7 +247,6 @@ func (c *Client) GetNodeInfo() (node *NodeInfo, err error) {
 			} else {
 				dns := []byte(strings.Join(matchs[1:], ""))
 				node.RawDNS.DNSJson = dns
-				break
 			}
 		}
 	}
