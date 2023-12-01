@@ -18,6 +18,14 @@ import (
 	F "github.com/sagernet/sing/common/format"
 )
 
+type HttpNetworkConfig struct {
+	Header struct {
+		Type     string           `json:"type"`
+		Request  *json.RawMessage `json:"request"`
+		Response *json.RawMessage `json:"response"`
+	} `json:"header"`
+}
+
 type WsNetworkConfig struct {
 	Path    string            `json:"path"`
 	Headers map[string]string `json:"headers"`
@@ -95,7 +103,22 @@ func getInboundOptions(tag string, info *panel.NodeInfo, c *conf.Options) (optio
 		}
 		switch n.Network {
 		case "tcp":
-			t.Type = ""
+			if len(n.NetworkSettings) != 0 {
+				network := HttpNetworkConfig{}
+				err := json.Unmarshal(n.NetworkSettings, &network)
+				if err != nil {
+					return option.Inbound{}, fmt.Errorf("decode NetworkSettings error: %s", err)
+				}
+				if network.Header.Type == "http" {
+					t.Type = network.Header.Type
+					//Todo fix http options
+					//t.HTTPOptions.Host =
+				} else {
+					t.Type = ""
+				}
+			} else {
+				t.Type = ""
+			}
 		case "ws":
 			var (
 				path    string
