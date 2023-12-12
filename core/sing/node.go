@@ -163,15 +163,19 @@ func getInboundOptions(tag string, info *panel.NodeInfo, c *conf.Options) (optio
 			in.Type = "vless"
 			in.VLESSOptions = option.VLESSInboundOptions{
 				ListenOptions: listen,
-				TLS:           &tls,
-				Transport:     &t,
+				InboundTLSOptionsContainer: option.InboundTLSOptionsContainer{
+					TLS: &tls,
+				},
+				Transport: &t,
 			}
 		} else {
 			in.Type = "vmess"
 			in.VMessOptions = option.VMessInboundOptions{
 				ListenOptions: listen,
-				TLS:           &tls,
-				Transport:     &t,
+				InboundTLSOptionsContainer: option.InboundTLSOptionsContainer{
+					TLS: &tls,
+				},
+				Transport: &t,
 			}
 		}
 	case "shadowsocks":
@@ -204,7 +208,9 @@ func getInboundOptions(tag string, info *panel.NodeInfo, c *conf.Options) (optio
 		in.Type = "trojan"
 		in.TrojanOptions = option.TrojanInboundOptions{
 			ListenOptions: listen,
-			TLS:           &tls,
+			InboundTLSOptionsContainer: option.InboundTLSOptionsContainer{
+				TLS: &tls,
+			},
 		}
 		if c.SingOptions.FallBackConfigs != nil {
 			// fallback handling
@@ -229,7 +235,9 @@ func getInboundOptions(tag string, info *panel.NodeInfo, c *conf.Options) (optio
 			UpMbps:        info.Hysteria.UpMbps,
 			DownMbps:      info.Hysteria.DownMbps,
 			Obfs:          info.Hysteria.Obfs,
-			TLS:           &tls,
+			InboundTLSOptionsContainer: option.InboundTLSOptionsContainer{
+				TLS: &tls,
+			},
 		}
 	case "hysteria2":
 		in.Type = "hysteria2"
@@ -250,7 +258,9 @@ func getInboundOptions(tag string, info *panel.NodeInfo, c *conf.Options) (optio
 			UpMbps:        info.Hysteria2.UpMbps,
 			DownMbps:      info.Hysteria2.DownMbps,
 			Obfs:          obfs,
-			TLS:           &tls,
+			InboundTLSOptionsContainer: option.InboundTLSOptionsContainer{
+				TLS: &tls,
+			},
 		}
 	}
 	return in, nil
