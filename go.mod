@@ -14,7 +14,7 @@ require (
 	github.com/sagernet/sing-box v1.8.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.8.0
-	github.com/xtls/xray-core v1.8.7-0.20231211200735-2c97beae4e0a
+	github.com/xtls/xray-core v1.8.7-0.20231212015254-46d6b9f57a2c
 	golang.org/x/crypto v0.16.0
 	golang.org/x/sys v0.15.0
 	google.golang.org/protobuf v1.31.0
@@ -208,18 +208,18 @@ require (
 	golang.org/x/exp v0.0.0-20231127185646-65229373498e // indirect
 	golang.org/x/mod v0.14.0 // indirect
 	golang.org/x/net v0.19.0 // indirect
-	golang.org/x/oauth2 v0.11.0 // indirect
+	golang.org/x/oauth2 v0.13.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/tools v0.16.0 // indirect
 	golang.zx2c4.com/wintun v0.0.0-20230126152724-0fa3db229ce2 // indirect
 	golang.zx2c4.com/wireguard v0.0.0-20231022001213-2e0774f246fb // indirect
 	google.golang.org/api v0.128.0 // indirect
-	google.golang.org/appengine v1.6.7 // indirect
+	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/genproto v0.0.0-20231030173426-d783a09b4405 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20231016165738-49dd2c1f3d0b // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231106174013-bbf56f31fb17 // indirect
-	google.golang.org/grpc v1.59.0 // indirect
+	google.golang.org/grpc v1.60.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/ns1/ns1-go.v2 v2.7.6 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
@@ -230,5 +230,5 @@ require (
 
 replace (
 	github.com/sagernet/sing-box v1.8.0 => github.com/wyx2685/sing-box_mod v0.0.0-20231211235528-165301110710
-	github.com/sagernet/sing-shadowsocks v0.2.4 => github.com/inazumav/sing-shadowsocks v0.0.0-20230815111927-7c68cbaeec5c
+	github.com/xtls/xray-core v1.8.7-0.20231212015254-46d6b9f57a2c => github.com/wyx2685/Xray-core_mod v0.0.0-20231212110503-2cf5155077d9
 )
