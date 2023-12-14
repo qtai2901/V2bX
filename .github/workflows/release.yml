@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - master
+      - dev_new
     paths:
       - "**/*.go"
       - "go.mod"
