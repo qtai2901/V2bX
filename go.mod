@@ -10,11 +10,11 @@ require (
 	github.com/goccy/go-json v0.10.2
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/juju/ratelimit v1.0.2
-	github.com/sagernet/sing v0.2.20-0.20231211084415-35e7014b0898
+	github.com/sagernet/sing v0.2.20-0.20231212123824-8836b6754226
 	github.com/sagernet/sing-box v1.8.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.8.0
-	github.com/xtls/xray-core v1.8.7-0.20231212015254-46d6b9f57a2c
+	github.com/xtls/xray-core v1.8.7-0.20231212162826-31a8fae76406
 	golang.org/x/crypto v0.16.0
 	golang.org/x/sys v0.15.0
 	google.golang.org/protobuf v1.31.0
@@ -167,7 +167,7 @@ require (
 	github.com/sagernet/sing-shadowsocks v0.2.6 // indirect
 	github.com/sagernet/sing-shadowsocks2 v0.1.6-0.20231207143709-50439739601a // indirect
 	github.com/sagernet/sing-shadowtls v0.1.4 // indirect
-	github.com/sagernet/sing-tun v0.1.24-0.20231211145236-1cd52bf7fa00 // indirect
+	github.com/sagernet/sing-tun v0.1.24-0.20231214063437-b967c6f8376d // indirect
 	github.com/sagernet/sing-vmess v0.1.8 // indirect
 	github.com/sagernet/smux v0.0.0-20231208180855-7041f6ea79e7 // indirect
 	github.com/sagernet/tfo-go v0.0.0-20231209031829-7b5343ac1dc6 // indirect
@@ -228,7 +228,4 @@ require (
 	lukechampine.com/blake3 v1.2.1 // indirect
 )
 
-replace (
-	github.com/sagernet/sing-box v1.8.0 => github.com/wyx2685/sing-box_mod v0.0.0-20231211235528-165301110710
-	github.com/xtls/xray-core v1.8.7-0.20231212015254-46d6b9f57a2c => github.com/wyx2685/Xray-core_mod v0.0.0-20231212110503-2cf5155077d9
-)
+replace github.com/sagernet/sing-box v1.8.0 => github.com/wyx2685/sing-box_mod v0.0.0-20231214093017-297ecbade09c
