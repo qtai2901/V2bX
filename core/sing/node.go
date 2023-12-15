@@ -10,14 +10,21 @@ import (
 	"strings"
 	"time"
 
-	"github.com/inazumav/sing-box/inbound"
-	F "github.com/sagernet/sing/common/format"
-
 	"github.com/InazumaV/V2bX/api/panel"
 	"github.com/InazumaV/V2bX/conf"
 	"github.com/goccy/go-json"
-	"github.com/inazumav/sing-box/option"
+	"github.com/sagernet/sing-box/inbound"
+	"github.com/sagernet/sing-box/option"
+	F "github.com/sagernet/sing/common/format"
 )
+
+type HttpNetworkConfig struct {
+	Header struct {
+		Type     string           `json:"type"`
+		Request  *json.RawMessage `json:"request"`
+		Response *json.RawMessage `json:"response"`
+	} `json:"header"`
+}
 
 type WsNetworkConfig struct {
 	Path    string            `json:"path"`
@@ -62,16 +69,24 @@ func getInboundOptions(tag string, info *panel.NodeInfo, c *conf.Options) (optio
 		tls.Enabled = true
 		v := info.VAllss
 		tls.ServerName = v.TlsSettings.ServerName
-		dest, _ := strconv.Atoi(v.TlsSettings.ServerPort)
+		port, _ := strconv.Atoi(v.TlsSettings.ServerPort)
+		var dest string
+		if v.TlsSettings.Dest != "" {
+			dest = v.TlsSettings.Dest
+		} else {
+			dest = tls.ServerName
+		}
+
 		mtd, _ := time.ParseDuration(v.RealityConfig.MaxTimeDiff)
 		tls.Reality = &option.InboundRealityOptions{
 			Enabled:    true,
 			ShortID:    []string{v.TlsSettings.ShortId},
 			PrivateKey: v.TlsSettings.PrivateKey,
+			Xver:       v.TlsSettings.Xver,
 			Handshake: option.InboundRealityHandshakeOptions{
 				ServerOptions: option.ServerOptions{
-					Server:     tls.ServerName,
-					ServerPort: uint16(dest),
+					Server:     dest,
+					ServerPort: uint16(port),
 				},
 			},
 			MaxTimeDifference: option.Duration(mtd),
@@ -88,7 +103,22 @@ func getInboundOptions(tag string, info *panel.NodeInfo, c *conf.Options) (optio
 		}
 		switch n.Network {
 		case "tcp":
-			t.Type = ""
+			if len(n.NetworkSettings) != 0 {
+				network := HttpNetworkConfig{}
+				err := json.Unmarshal(n.NetworkSettings, &network)
+				if err != nil {
+					return option.Inbound{}, fmt.Errorf("decode NetworkSettings error: %s", err)
+				}
+				if network.Header.Type == "http" {
+					t.Type = network.Header.Type
+					//Todo fix http options
+					//t.HTTPOptions.Host =
+				} else {
+					t.Type = ""
+				}
+			} else {
+				t.Type = ""
+			}
 		case "ws":
 			var (
 				path    string
@@ -133,15 +163,19 @@ func getInboundOptions(tag string, info *panel.NodeInfo, c *conf.Options) (optio
 			in.Type = "vless"
 			in.VLESSOptions = option.VLESSInboundOptions{
 				ListenOptions: listen,
-				TLS:           &tls,
-				Transport:     &t,
+				InboundTLSOptionsContainer: option.InboundTLSOptionsContainer{
+					TLS: &tls,
+				},
+				Transport: &t,
 			}
 		} else {
 			in.Type = "vmess"
 			in.VMessOptions = option.VMessInboundOptions{
 				ListenOptions: listen,
-				TLS:           &tls,
-				Transport:     &t,
+				InboundTLSOptionsContainer: option.InboundTLSOptionsContainer{
+					TLS: &tls,
+				},
+				Transport: &t,
 			}
 		}
 	case "shadowsocks":
@@ -174,7 +208,9 @@ func getInboundOptions(tag string, info *panel.NodeInfo, c *conf.Options) (optio
 		in.Type = "trojan"
 		in.TrojanOptions = option.TrojanInboundOptions{
 			ListenOptions: listen,
-			TLS:           &tls,
+			InboundTLSOptionsContainer: option.InboundTLSOptionsContainer{
+				TLS: &tls,
+			},
 		}
 		if c.SingOptions.FallBackConfigs != nil {
 			// fallback handling
@@ -199,13 +235,38 @@ func getInboundOptions(tag string, info *panel.NodeInfo, c *conf.Options) (optio
 			UpMbps:        info.Hysteria.UpMbps,
 			DownMbps:      info.Hysteria.DownMbps,
 			Obfs:          info.Hysteria.Obfs,
-			TLS:           &tls,
+			InboundTLSOptionsContainer: option.InboundTLSOptionsContainer{
+				TLS: &tls,
+			},
+		}
+	case "hysteria2":
+		in.Type = "hysteria2"
+		var obfs *option.Hysteria2Obfs
+		if info.Hysteria2.ObfsType != "" && info.Hysteria2.ObfsPassword != "" {
+			obfs = &option.Hysteria2Obfs{
+				Type:     info.Hysteria2.ObfsType,
+				Password: info.Hysteria2.ObfsPassword,
+			}
+		} else if info.Hysteria2.ObfsType != "" {
+			obfs = &option.Hysteria2Obfs{
+				Type:     "salamander",
+				Password: info.Hysteria2.ObfsType,
+			}
+		}
+		in.Hysteria2Options = option.Hysteria2InboundOptions{
+			ListenOptions: listen,
+			UpMbps:        info.Hysteria2.UpMbps,
+			DownMbps:      info.Hysteria2.DownMbps,
+			Obfs:          obfs,
+			InboundTLSOptionsContainer: option.InboundTLSOptionsContainer{
+				TLS: &tls,
+			},
 		}
 	}
 	return in, nil
 }
 
-func (b *Box) AddNode(tag string, info *panel.NodeInfo, config *conf.Options) error {
+func (b *Sing) AddNode(tag string, info *panel.NodeInfo, config *conf.Options) error {
 	err := updateDNSConfig(info)
 	if err != nil {
 		return fmt.Errorf("build dns error: %s", err)
@@ -217,7 +278,7 @@ func (b *Box) AddNode(tag string, info *panel.NodeInfo, config *conf.Options) er
 
 	in, err := inbound.New(
 		b.ctx,
-		b.router,
+		b.box.Router(),
 		b.logFactory.NewLogger(F.ToString("inbound/", c.Type, "[", tag, "]")),
 		c,
 		nil,
@@ -237,7 +298,7 @@ func (b *Box) AddNode(tag string, info *panel.NodeInfo, config *conf.Options) er
 	return nil
 }
 
-func (b *Box) DelNode(tag string) error {
+func (b *Sing) DelNode(tag string) error {
 	err := b.inbounds[tag].Close()
 	if err != nil {
 		return fmt.Errorf("close inbound error: %s", err)

@@ -1,6 +1,11 @@
 package cmd
 
 import (
+	"os"
+	"os/signal"
+	"runtime"
+	"syscall"
+
 	"github.com/InazumaV/V2bX/conf"
 	vCore "github.com/InazumaV/V2bX/core"
 	"github.com/InazumaV/V2bX/limiter"
@@ -8,10 +13,6 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"gopkg.in/natefinch/lumberjack.v2"
-	"os"
-	"os/signal"
-	"runtime"
-	"syscall"
 )
 
 var (
@@ -95,6 +96,7 @@ func serverHandle(_ *cobra.Command, _ []string) {
 				log.WithField("err", err).Error("Restart node failed")
 				return
 			}
+			runtime.GC()
 			vc, err = vCore.NewCore(c.CoresConfig)
 			if err != nil {
 				log.WithField("err", err).Error("New core failed")
@@ -112,7 +114,6 @@ func serverHandle(_ *cobra.Command, _ []string) {
 				return
 			}
 			log.Info("Nodes restarted")
-			runtime.GC()
 		})
 		if err != nil {
 			log.WithField("err", err).Error("start watch failed")

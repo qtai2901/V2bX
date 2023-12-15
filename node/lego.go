@@ -99,6 +99,9 @@ func (l *Lego) CreateCert() (err error) {
 		return fmt.Errorf("obtain certificate error: %s", err)
 	}
 	err = l.writeCert(certificates)
+	if err != nil {
+		return fmt.Errorf("write certificate error: %s", err)
+	}
 	return nil
 }
 
@@ -120,6 +123,9 @@ func (l *Lego) RenewCert() error {
 		return err
 	}
 	err = l.writeCert(res)
+	if err != nil {
+		return fmt.Errorf("write certificate error: %s", err)
+	}
 	return nil
 }
 

@@ -2,12 +2,13 @@ package conf
 
 import (
 	"fmt"
-	"github.com/InazumaV/V2bX/common/json5"
-	"github.com/goccy/go-json"
 	"io"
 	"net/http"
 	"os"
 	"strings"
+
+	"github.com/InazumaV/V2bX/common/json5"
+	"github.com/goccy/go-json"
 )
 
 type NodeConfig struct {
@@ -102,16 +103,17 @@ func (n *NodeConfig) UnmarshalJSON(data []byte) (err error) {
 }
 
 type Options struct {
-	Name        string          `json:"Name"`
-	Core        string          `json:"Core"`
-	CoreName    string          `json:"CoreName"`
-	ListenIP    string          `json:"ListenIP"`
-	SendIP      string          `json:"SendIP"`
-	LimitConfig LimitConfig     `json:"LimitConfig"`
-	RawOptions  json.RawMessage `json:"RawOptions"`
-	XrayOptions *XrayOptions    `json:"XrayOptions"`
-	SingOptions *SingOptions    `json:"SingOptions"`
-	CertConfig  *CertConfig     `json:"CertConfig"`
+	Name                   string          `json:"Name"`
+	Core                   string          `json:"Core"`
+	CoreName               string          `json:"CoreName"`
+	ListenIP               string          `json:"ListenIP"`
+	SendIP                 string          `json:"SendIP"`
+	DeviceOnlineMinTraffic int64           `json:"DeviceOnlineMinTraffic"`
+	LimitConfig            LimitConfig     `json:"LimitConfig"`
+	RawOptions             json.RawMessage `json:"RawOptions"`
+	XrayOptions            *XrayOptions    `json:"XrayOptions"`
+	SingOptions            *SingOptions    `json:"SingOptions"`
+	CertConfig             *CertConfig     `json:"CertConfig"`
 }
 
 func (o *Options) UnmarshalJSON(data []byte) error {
