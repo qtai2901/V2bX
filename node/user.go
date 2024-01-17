@@ -1,6 +1,7 @@
 package node
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/InazumaV/V2bX/api/panel"
@@ -34,9 +35,48 @@ func (c *Controller) reportUserTrafficTask() (err error) {
 				"err": err,
 			}).Info("Report user traffic failed")
 		} else {
-			log.WithField("tag", c.tag).Infof("Report %d online users", len(userTraffic))
+			log.WithField("tag", c.tag).Infof("Report %d users traffic", len(userTraffic))
 		}
 	}
+
+	if onlineDevice, err := c.limiter.GetOnlineDevice(); err != nil {
+		log.Print(err)
+	} else if len(*onlineDevice) > 0 {
+		// Only report user has traffic > 100kb to allow ping test
+		var result []panel.OnlineUser
+		var nocountUID = make(map[int]struct{})
+		for _, traffic := range userTraffic {
+			total := traffic.Upload + traffic.Download
+			if total < int64(c.Options.DeviceOnlineMinTraffic*1000) {
+				nocountUID[traffic.UID] = struct{}{}
+			}
+		}
+		for _, online := range *onlineDevice {
+			if _, ok := nocountUID[online.UID]; !ok {
+				result = append(result, online)
+			}
+		}
+		reportOnline := make(map[int]int)
+		data := make(map[int][]string)
+		for _, onlineuser := range result {
+			// json structure: { UID1:["ip1","ip2"],UID2:["ip3","ip4"] }
+			data[onlineuser.UID] = append(data[onlineuser.UID], fmt.Sprintf("%s_%d", onlineuser.IP, c.info.Id))
+			if _, ok := reportOnline[onlineuser.UID]; ok {
+				reportOnline[onlineuser.UID]++
+			} else {
+				reportOnline[onlineuser.UID] = 1
+			}
+		}
+		if err = c.apiClient.ReportNodeOnlineUsers(&data, &reportOnline); err != nil {
+			log.WithFields(log.Fields{
+				"tag": c.tag,
+				"err": err,
+			}).Info("Report online users failed")
+		} else {
+			log.WithField("tag", c.tag).Infof("Total %d online users, %d Reported", len(*onlineDevice), len(result))
+		}
+	}
+
 	userTraffic = nil
 	return nil
 }

@@ -16,13 +16,14 @@ import (
 // Panel is the interface for different panel's api.
 
 type Client struct {
-	client   *resty.Client
-	APIHost  string
-	Token    string
-	NodeType string
-	NodeId   int
-	nodeEtag string
-	userEtag string
+	client           *resty.Client
+	APIHost          string
+	Token            string
+	NodeType         string
+	NodeId           int
+	nodeEtag         string
+	userEtag         string
+	LastReportOnline map[int]int
 }
 
 func New(c *conf.ApiConfig) (*Client, error) {
@@ -52,6 +53,7 @@ func New(c *conf.ApiConfig) (*Client, error) {
 		"trojan",
 		"shadowsocks",
 		"hysteria",
+		"hysteria2",
 		"vless":
 	default:
 		return nil, fmt.Errorf("unsupported Node type: %s", c.NodeType)

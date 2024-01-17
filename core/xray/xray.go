@@ -1,6 +1,7 @@
 package xray
 
 import (
+	"fmt"
 	"os"
 	"sync"
 
@@ -21,12 +22,14 @@ import (
 	coreConf "github.com/xtls/xray-core/infra/conf"
 )
 
+var _ vCore.Core = (*Xray)(nil)
+
 func init() {
 	vCore.RegisterCore("xray", New)
 }
 
-// Core Structure
-type Core struct {
+// Xray Structure
+type Xray struct {
 	access     sync.Mutex
 	Server     *core.Instance
 	ihm        inbound.Manager
@@ -36,7 +39,7 @@ type Core struct {
 }
 
 func New(c *conf.CoreConfig) (vCore.Core, error) {
-	return &Core{Server: getCore(c.XrayConfig)}, nil
+	return &Xray{Server: getCore(c.XrayConfig)}, nil
 }
 
 func parseConnectionConfig(c *conf.XrayConnectionConfig) (policy *coreConf.Policy) {
@@ -63,12 +66,14 @@ func getCore(c *conf.XrayConfig) *core.Instance {
 	coreDnsConfig := &coreConf.DNSConfig{}
 	os.Setenv("XRAY_DNS_PATH", "")
 	if c.DnsConfigPath != "" {
-		if f, err := os.Open(c.DnsConfigPath); err != nil {
-			log.WithField("err", err).Panic("Failed to read DNS config file")
-		} else {
-			if err = json.NewDecoder(f).Decode(coreDnsConfig); err != nil {
-				log.WithField("err", err).Error("Failed to unmarshal DNS config")
-			}
+		f, err := os.OpenFile(c.DnsConfigPath, os.O_RDWR|os.O_CREATE, 0755)
+		if err != nil {
+			log.Error("Failed to open or create xray dns config file: %v", err)
+		}
+		defer f.Close()
+		if err := json.NewDecoder(f).Decode(coreDnsConfig); err != nil {
+			log.Error(fmt.Sprintf("Failed to unmarshal xray dns config from file '%v': %v. Using default DNS options.", f.Name(), err))
+			coreDnsConfig = &coreConf.DNSConfig{}
 		}
 		os.Setenv("XRAY_DNS_PATH", c.DnsConfigPath)
 	}
@@ -134,7 +139,7 @@ func getCore(c *conf.XrayConfig) *core.Instance {
 	corePolicyConfig := &coreConf.PolicyConfig{}
 	corePolicyConfig.Levels = map[uint32]*coreConf.Policy{0: levelPolicyConfig}
 	policyConfig, _ := corePolicyConfig.Build()
-	// Build Core conf
+	// Build Xray conf
 	config := &core.Config{
 		App: []*serial.TypedMessage{
 			serial.ToTypedMessage(coreLogConfig.Build()),
@@ -157,8 +162,8 @@ func getCore(c *conf.XrayConfig) *core.Instance {
 	return server
 }
 
-// Start the Core
-func (c *Core) Start() error {
+// Start the Xray
+func (c *Xray) Start() error {
 	c.access.Lock()
 	defer c.access.Unlock()
 	if err := c.Server.Start(); err != nil {
@@ -172,7 +177,7 @@ func (c *Core) Start() error {
 }
 
 // Close  the core
-func (c *Core) Close() error {
+func (c *Xray) Close() error {
 	c.access.Lock()
 	defer c.access.Unlock()
 	c.ihm = nil
@@ -186,7 +191,7 @@ func (c *Core) Close() error {
 	return nil
 }
 
-func (c *Core) Protocols() []string {
+func (c *Xray) Protocols() []string {
 	return []string{
 		"vmess",
 		"vless",
@@ -195,6 +200,6 @@ func (c *Core) Protocols() []string {
 	}
 }
 
-func (c *Core) Type() string {
+func (c *Xray) Type() string {
 	return "xray"
 }
